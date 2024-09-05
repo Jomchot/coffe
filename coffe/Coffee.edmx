@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="dbCoffeeShopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Menu">
+          <Key>
+            <PropertyRef Name="idmenu" />
+          </Key>
+          <Property Name="idmenu" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nchar" MaxLength="100" />
+          <Property Name="price" Type="int" />
+          <Property Name="image" Type="image" />
+          <Property Name="idtype" Type="int" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="oid" />
+          </Key>
+          <Property Name="oid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idmenu" Type="int" />
+          <Property Name="number" Type="int" />
+          <Property Name="priceamount" Type="int" />
+          <Property Name="date" Type="date" />
+        </EntityType>
+        <EntityType Name="TypeCoffee">
+          <Key>
+            <PropertyRef Name="idtype" />
+          </Key>
+          <Property Name="idtype" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="100" />
+          <Property Name="type" Type="int" />
+        </EntityType>
+        <Association Name="FK_Menu_TypeCoffee">
+          <End Role="TypeCoffee" Type="Self.TypeCoffee" Multiplicity="0..1" />
+          <End Role="Menu" Type="Self.Menu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeCoffee">
+              <PropertyRef Name="idtype" />
+            </Principal>
+            <Dependent Role="Menu">
+              <PropertyRef Name="idtype" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Menu">
+          <End Role="Menu" Type="Self.Menu" Multiplicity="0..1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Menu">
+              <PropertyRef Name="idmenu" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="idmenu" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbCoffeeShopModelStoreContainer">
+          <EntitySet Name="Menu" EntityType="Self.Menu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TypeCoffee" EntityType="Self.TypeCoffee" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Menu_TypeCoffee" Association="Self.FK_Menu_TypeCoffee">
+            <End Role="TypeCoffee" EntitySet="TypeCoffee" />
+            <End Role="Menu" EntitySet="Menu" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Menu" Association="Self.FK_Order_Menu">
+            <End Role="Menu" EntitySet="Menu" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dbCoffeeShopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Menu">
+          <Key>
+            <PropertyRef Name="idmenu" />
+          </Key>
+          <Property Name="idmenu" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="price" Type="Int32" />
+          <Property Name="image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="idtype" Type="Int32" />
+          <NavigationProperty Name="TypeCoffee" Relationship="dbCoffeeShopModel.FK_Menu_TypeCoffee" FromRole="Menu" ToRole="TypeCoffee" />
+          <NavigationProperty Name="Orders" Relationship="dbCoffeeShopModel.FK_Order_Menu" FromRole="Menu" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="oid" />
+          </Key>
+          <Property Name="oid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idmenu" Type="Int32" />
+          <Property Name="number" Type="Int32" />
+          <Property Name="priceamount" Type="Int32" />
+          <Property Name="date" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Menu" Relationship="dbCoffeeShopModel.FK_Order_Menu" FromRole="Order" ToRole="Menu" />
+        </EntityType>
+        <EntityType Name="TypeCoffee">
+          <Key>
+            <PropertyRef Name="idtype" />
+          </Key>
+          <Property Name="idtype" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="type" Type="Int32" />
+          <NavigationProperty Name="Menus" Relationship="dbCoffeeShopModel.FK_Menu_TypeCoffee" FromRole="TypeCoffee" ToRole="Menu" />
+        </EntityType>
+        <EntityContainer Name="dbCoffeeShopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Menus" EntityType="Self.Menu" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="TypeCoffees" EntityType="Self.TypeCoffee" />
+          <AssociationSet Name="FK_Menu_TypeCoffee" Association="dbCoffeeShopModel.FK_Menu_TypeCoffee">
+            <End Role="TypeCoffee" EntitySet="TypeCoffees" />
+            <End Role="Menu" EntitySet="Menus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Menu" Association="dbCoffeeShopModel.FK_Order_Menu">
+            <End Role="Menu" EntitySet="Menus" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_Menu_TypeCoffee">
+          <End Type="dbCoffeeShopModel.TypeCoffee" Role="TypeCoffee" Multiplicity="0..1" />
+          <End Type="dbCoffeeShopModel.Menu" Role="Menu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeCoffee">
+              <PropertyRef Name="idtype" />
+            </Principal>
+            <Dependent Role="Menu">
+              <PropertyRef Name="idtype" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Menu">
+          <End Type="dbCoffeeShopModel.Menu" Role="Menu" Multiplicity="0..1" />
+          <End Type="dbCoffeeShopModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Menu">
+              <PropertyRef Name="idmenu" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="idmenu" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dbCoffeeShopModelStoreContainer" CdmEntityContainer="dbCoffeeShopEntities">
+          <EntitySetMapping Name="Menus">
+            <EntityTypeMapping TypeName="dbCoffeeShopModel.Menu">
+              <MappingFragment StoreEntitySet="Menu">
+                <ScalarProperty Name="idmenu" ColumnName="idmenu" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="idtype" ColumnName="idtype" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="dbCoffeeShopModel.Order">
+              <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="oid" ColumnName="oid" />
+                <ScalarProperty Name="idmenu" ColumnName="idmenu" />
+                <ScalarProperty Name="number" ColumnName="number" />
+                <ScalarProperty Name="priceamount" ColumnName="priceamount" />
+                <ScalarProperty Name="date" ColumnName="date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TypeCoffees">
+            <EntityTypeMapping TypeName="dbCoffeeShopModel.TypeCoffee">
+              <MappingFragment StoreEntitySet="TypeCoffee">
+                <ScalarProperty Name="idtype" ColumnName="idtype" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
